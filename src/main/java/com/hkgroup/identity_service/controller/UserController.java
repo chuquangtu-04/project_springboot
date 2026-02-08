@@ -3,6 +3,7 @@ package com.hkgroup.identity_service.controller;
 import com.hkgroup.identity_service.dto.request.UserCreationRequest;
 import com.hkgroup.identity_service.dto.request.UserUpdateRequest;
 import com.hkgroup.identity_service.dto.response.ApiResponse;
+import com.hkgroup.identity_service.dto.response.UserResponse;
 import com.hkgroup.identity_service.entity.User;
 import com.hkgroup.identity_service.service.UserService;
 import jakarta.validation.Valid;
@@ -30,12 +31,12 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    User getUser(@PathVariable("userId") String userId) {
+    UserResponse getUser(@PathVariable("userId") String userId) {
         return userService.getUser(userId);
     }
 
     @PatchMapping("/{userId}")
-    User updateUser(
+    UserResponse updateUser(
             @PathVariable("userId") String userId,
             @RequestBody UserUpdateRequest request
     ) {

@@ -1,17 +1,21 @@
-package com.hkgroup.identity_service.dto.request;
+package com.hkgroup.identity_service.dto.response;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
 
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserUpdateRequest {
+public class UserResponse {
+    String id;
     String userName;
+    String password;
     String firstName;
     String lastName;
     LocalDate dob;
