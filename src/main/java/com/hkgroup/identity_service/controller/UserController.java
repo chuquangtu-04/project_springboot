@@ -19,15 +19,24 @@ public class UserController {
     private UserService userService;
 
     @PostMapping
-    ApiResponse<User> createUser(@RequestBody @Valid UserCreationRequest request) {
+    public ApiResponse<User> createUser(@RequestBody @Valid UserCreationRequest request) {
+        System.out.println("GetName: "+ request.getUserName());
         ApiResponse<User> apiResponse = new ApiResponse<>();
         apiResponse.setResult(userService.createRequest(request));
         return apiResponse;
     }
 
+//    @GetMapping
+//    List<User> getUsers() {
+//        return  userService.getUsers();
+//    }
     @GetMapping
-    List<User> getUsers() {
-        return  userService.getUsers();
+    public ApiResponse<List<UserResponse>> getUsers() {
+        ApiResponse<List<UserResponse>> apiResponse = new ApiResponse<>();
+        List<UserResponse> list = userService.getUsers();
+        apiResponse.successFull();
+        apiResponse.setResult(list);
+        return apiResponse;
     }
 
     @GetMapping("/{userId}")

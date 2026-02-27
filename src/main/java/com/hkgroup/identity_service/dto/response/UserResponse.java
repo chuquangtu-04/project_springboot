@@ -1,9 +1,6 @@
 package com.hkgroup.identity_service.dto.response;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
@@ -12,11 +9,12 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Builder
 public class UserResponse {
     String id;
     String userName;
-    String password;
     String firstName;
     String lastName;
+    String phone;
     LocalDate dob;
 }
