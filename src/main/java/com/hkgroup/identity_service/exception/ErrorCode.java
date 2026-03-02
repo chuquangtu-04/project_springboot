@@ -7,6 +7,7 @@ public enum ErrorCode {
     INVALID_KEY(2004, "Invalid message key"),
     USER_EXISTED(1001, "User existed!"),
     PHONE_INVALID(1005,"phone invalid format"),
+    UNAUTHENTICATED(1007, "Unauthenticated"),
     USER_NOT_EXISTED(1001, "User not existed!");
     ErrorCode(int code, String message) {
         this.code = code;

@@ -29,6 +29,9 @@ public class AuthenticationService {
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         Boolean result = passwordEncoder.matches(request.getPassword(), user.getPassword());
+        if(!result) {
+            throw new AppException(ErrorCode.UNAUTHENTICATED);
+        }
         return userMapper.toAuthenticationResponse(result);
     }
 }
