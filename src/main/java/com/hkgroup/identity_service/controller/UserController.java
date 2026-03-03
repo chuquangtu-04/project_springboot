@@ -7,11 +7,15 @@ import com.hkgroup.identity_service.dto.response.UserResponse;
 import com.hkgroup.identity_service.entity.User;
 import com.hkgroup.identity_service.service.UserService;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -32,11 +36,18 @@ public class UserController {
 //    }
     @GetMapping
     public ApiResponse<List<UserResponse>> getUsers() {
-        ApiResponse<List<UserResponse>> apiResponse = new ApiResponse<>();
-        List<UserResponse> list = userService.getUsers();
-        apiResponse.successFull();
-        apiResponse.setResult(list);
-        return apiResponse;
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        log.info("UserName: {}", authentication.getName());
+        authentication.getAuthorities().forEach(grantedAuthority -> log.info(grantedAuthority.getAuthority()));
+        return ApiResponse.<List<UserResponse>>builder()
+                .result(userService.getUsers())
+                .build();
+    }
+    @GetMapping("/myInfo")
+    public ApiResponse<UserResponse> getMyInfoUser() {
+        return ApiResponse.<UserResponse>builder()
+                .result(userService.getMyInfo())
+                .build();
     }
 
     @GetMapping("/{userId}")
