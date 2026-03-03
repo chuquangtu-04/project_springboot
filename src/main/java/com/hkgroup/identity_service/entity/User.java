@@ -23,6 +23,7 @@ public class User {
     private String lastName;
     private String phone;
     private LocalDate dob;
+    private Set<String> role;
     @OneToMany(mappedBy = "user")
     @ToString.Exclude
     private Set<GroupHasUser> users = new HashSet<>();
