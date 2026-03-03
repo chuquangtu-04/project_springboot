@@ -8,6 +8,7 @@ public enum ErrorCode {
     USER_EXISTED(1001, "User existed!"),
     PHONE_INVALID(1005,"phone invalid format"),
     UNAUTHENTICATED(1007, "Unauthenticated"),
+    TOKEN_EXPIRED(1008, "Token expired"),
     USER_NOT_EXISTED(1001, "User not existed!");
     ErrorCode(int code, String message) {
         this.code = code;

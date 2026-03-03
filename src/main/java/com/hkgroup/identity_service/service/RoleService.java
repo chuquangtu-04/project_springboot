@@ -11,7 +11,7 @@ import java.util.List;
 
 @Service
 public record RoleService(RoleRepository roleRepository) {
-    @PostConstruct
+//    @PostConstruct
     public void printAllRoles() {
 //        List<Role> userRole = roleRepository.getAllByUserId(1);
 //        for (Role roles: userRole) {
