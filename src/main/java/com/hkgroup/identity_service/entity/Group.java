@@ -17,11 +17,10 @@ import java.util.Set;
 @Table(name = "tbl_group")
 public class Group {
     @Id
-    private Integer id;
     private String name;
     private String description;
     @OneToOne
     private Role role;
-    @OneToMany(mappedBy = "group")
-    private Set<GroupHasUser> groups = new HashSet<>();
+    @ManyToMany
+    Set<User> users;
 }
