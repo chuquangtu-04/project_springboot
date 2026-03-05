@@ -7,6 +7,7 @@ import com.hkgroup.identity_service.dto.response.UserResponse;
 import com.hkgroup.identity_service.entity.User;
 import com.hkgroup.identity_service.service.UserService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContext;
@@ -18,22 +19,16 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/users")
+@RequiredArgsConstructor
 public class UserController {
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
     @PostMapping
-    public ApiResponse<User> createUser(@RequestBody @Valid UserCreationRequest request) {
-        System.out.println("GetName: "+ request.getUserName());
-        ApiResponse<User> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(userService.createRequest(request));
-        return apiResponse;
+    public ApiResponse<UserResponse> createUser(@RequestBody @Valid UserCreationRequest request) {
+        return ApiResponse.<UserResponse>builder()
+                .result(userService.createRequest(request))
+                .build();
     }
-
-//    @GetMapping
-//    List<User> getUsers() {
-//        return  userService.getUsers();
-//    }
     @GetMapping
     public ApiResponse<List<UserResponse>> getUsers() {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -55,12 +50,15 @@ public class UserController {
         return userService.getUser(userId);
     }
 
-    @PatchMapping("/{userId}")
-    UserResponse updateUser(
+    @PutMapping("/{userId}")
+    public ApiResponse<UserResponse> updateUser(
             @PathVariable("userId") String userId,
             @RequestBody UserUpdateRequest request
     ) {
-        return userService.updateUser(userId, request);
+        UserResponse result = userService.updateUser(userId, request);
+        return ApiResponse.<UserResponse>builder()
+                .result(result)
+                .build();
     }
 
     @DeleteMapping("/{userId}")
