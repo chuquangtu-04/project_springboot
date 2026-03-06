@@ -17,7 +17,7 @@ import java.util.Set;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserCreationRequest {
-    @Size(min = 3, message = "USER_INVALID")
+    @Size(min = 6, message = "USER_INVALID")
     String userName;
     @Size(min = 8, message = "PASSWORD_INVALID")
     String password;
@@ -25,6 +25,6 @@ public class UserCreationRequest {
     String lastName;
     @PhoneNumber(message = "PHONE_INVALID")
     String phone;
-    @DobContraint(min = 2, message = "INVALID_DOB")
+    @DobContraint(min = 16, message = "INVALID_DOB")
     LocalDate dob;
 }
