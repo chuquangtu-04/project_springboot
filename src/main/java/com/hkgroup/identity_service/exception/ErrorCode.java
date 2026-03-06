@@ -11,6 +11,7 @@ public enum ErrorCode {
     TOKEN_EXPIRED(1008, "Token expired"),
     PERMISSION_EXISTED(1009, "Permission existed!"),
     ROLE_EXISTED(1010, "Role existed!"),
+    INVALID_DOB(2000, "Invalid date of birth"),
     USER_NOT_EXISTED(1001, "User not existed!");
     ErrorCode(int code, String message) {
         this.code = code;

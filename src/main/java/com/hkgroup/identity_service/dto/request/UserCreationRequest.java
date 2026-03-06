@@ -3,6 +3,7 @@ package com.hkgroup.identity_service.dto.request;
 import com.hkgroup.identity_service.exception.AppException;
 import com.hkgroup.identity_service.exception.ErrorCode;
 import com.hkgroup.identity_service.util.PhoneNumber;
+import com.hkgroup.identity_service.validator.DobContraint;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -24,5 +25,6 @@ public class UserCreationRequest {
     String lastName;
     @PhoneNumber(message = "PHONE_INVALID")
     String phone;
+    @DobContraint(min = 2, message = "INVALID_DOB")
     LocalDate dob;
 }
