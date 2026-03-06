@@ -3,15 +3,22 @@ package com.hkgroup.identity_service.exception;
 import ch.qos.logback.core.spi.ErrorCodes;
 import com.hkgroup.identity_service.dto.response.ApiResponse;
 import com.hkgroup.identity_service.entity.User;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintViolation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.Objects;
 
+@Slf4j
 @ControllerAdvice
 public class GlobalExceptionHandler {
+    private static final String MIN_ATTRIBUTF = "min";
 
     @ExceptionHandler(value = Exception.class)
     ResponseEntity<ApiResponse> handlingRuntimeException(Exception exception) {
@@ -35,20 +42,32 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     ResponseEntity<ApiResponse> handlingMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
         String enumKey = exception.getFieldError().getDefaultMessage();
-
         System.out.println("EnumKey: "+ enumKey);
 
         ErrorCode errorCode = ErrorCode.INVALID_KEY;
+        Map<String, Object> attributes = null;
         try {
              errorCode = ErrorCode.valueOf(enumKey);
+
+            var constraintViolation = exception.getBindingResult()
+                    .getAllErrors().getFirst().unwrap(ConstraintViolation.class);
+            var listError = exception.getBindingResult();
+            attributes = constraintViolation.getConstraintDescriptor().getAttributes();
+            log.info(attributes.toString());
         } catch (IllegalArgumentException e) {
 
         }
 
         ApiResponse apiResponse = new ApiResponse();
         apiResponse.setCode(errorCode.getCode());
-        apiResponse.setMessage(errorCode.getMessage());
+        apiResponse.setMessage(Objects.nonNull(attributes) ?
+                mapAttribute(errorCode.getMessage(), attributes) :
+                errorCode.getMessage());
 
         return  ResponseEntity.badRequest().body(apiResponse);
+    }
+    private String mapAttribute(String message, Map<String, Object> attributes) {
+        String minValue = String.valueOf(attributes.get(MIN_ATTRIBUTF));
+        return message.replace("{"+ MIN_ATTRIBUTF + "}", minValue);
     }
 }
