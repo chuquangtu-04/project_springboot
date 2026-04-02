@@ -3,6 +3,7 @@ package com.hkgroup.identity_service.service;
 import com.hkgroup.identity_service.dto.request.AuthenticationRequest;
 import com.hkgroup.identity_service.dto.request.IntrospectRequest;
 import com.hkgroup.identity_service.dto.request.LogoutRequest;
+import com.hkgroup.identity_service.dto.request.RefreshTokenRequest;
 import com.hkgroup.identity_service.dto.response.ApiResponse;
 import com.hkgroup.identity_service.dto.response.AuthenticationResponse;
 import com.hkgroup.identity_service.dto.response.IntrospectResponse;
@@ -133,10 +134,36 @@ public class AuthenticationService {
         String jwtId = signToken.getJWTClaimsSet().getJWTID();
         Date expiryTime = signToken.getJWTClaimsSet().getExpirationTime();
 
+        System.out.println("expiryTime: "+ expiryTime);
+
         InvalidatedToken invalidatedToken = InvalidatedToken.builder()
                 .id(jwtId)
                 .expiryTime(expiryTime)
                 .build();
         invalidatedTokenRepository.save(invalidatedToken);
+    }
+    public AuthenticationResponse refreshToken(RefreshTokenRequest request) throws ParseException, JOSEException {
+        var signToken = verifyToken(request.getToken());
+        String jwtId = signToken.getJWTClaimsSet().getJWTID();
+        Date expiryTime = signToken.getJWTClaimsSet().getExpirationTime();
+
+        InvalidatedToken invalidatedToken = InvalidatedToken.builder()
+                .id(jwtId)
+                .expiryTime(expiryTime)
+                .build();
+        invalidatedTokenRepository.save(invalidatedToken);
+
+        var username = signToken.getJWTClaimsSet().getSubject();
+
+        var user = userRepository.findByuserName(username).orElseThrow(
+                () -> new AppException(ErrorCode.UNAUTHENTICATED)
+        );
+
+        var token = generateToken(user);
+        return  AuthenticationResponse.builder()
+                .authenticated(true)
+                .token(token)
+                .build();
+
     }
 }

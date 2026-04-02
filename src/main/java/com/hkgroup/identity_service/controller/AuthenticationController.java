@@ -1,9 +1,6 @@
 package com.hkgroup.identity_service.controller;
 
-import com.hkgroup.identity_service.dto.request.AuthenticationRequest;
-import com.hkgroup.identity_service.dto.request.IntrospectRequest;
-import com.hkgroup.identity_service.dto.request.LogoutRequest;
-import com.hkgroup.identity_service.dto.request.UserCreationRequest;
+import com.hkgroup.identity_service.dto.request.*;
 import com.hkgroup.identity_service.dto.response.ApiResponse;
 import com.hkgroup.identity_service.dto.response.AuthenticationResponse;
 import com.hkgroup.identity_service.dto.response.IntrospectResponse;
@@ -49,6 +46,14 @@ public class AuthenticationController {
     ApiResponse<Void> logout(@RequestBody LogoutRequest request) throws ParseException, JOSEException {
         authenticationService.logout(request);
         return ApiResponse.<Void>builder()
+                .build();
+    }
+    @PostMapping("/refresh")
+    ApiResponse<AuthenticationResponse> refreshTone(@RequestBody RefreshTokenRequest request) throws ParseException, JOSEException {
+        System.out.println("Hello chu quang tu");
+        var result = authenticationService.refreshToken(request);
+        return  ApiResponse.<AuthenticationResponse>builder()
+                .result(result)
                 .build();
     }
 }
