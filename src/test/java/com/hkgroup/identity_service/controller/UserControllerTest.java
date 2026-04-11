@@ -24,8 +24,8 @@ import java.time.LocalDate;
 
 @Slf4j
 @SpringBootTest
-@AutoConfigureMockMvc
 @ActiveProfiles("test")
+@AutoConfigureMockMvc
 public class UserControllerTest {
 
     @Autowired
