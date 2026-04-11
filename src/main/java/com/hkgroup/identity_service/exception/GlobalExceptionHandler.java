@@ -1,21 +1,17 @@
 package com.hkgroup.identity_service.exception;
 
-import ch.qos.logback.core.spi.ErrorCodes;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.Objects;
+
 import com.hkgroup.identity_service.dto.response.ApiResponse;
-import com.hkgroup.identity_service.entity.User;
-import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintViolation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.Objects;
 
 @Slf4j
 @ControllerAdvice
@@ -45,26 +41,24 @@ public class GlobalExceptionHandler {
     ResponseEntity<ApiResponse> handlingAccessDeniedException(AccessDeniedException exception) {
         ErrorCode errorCode = ErrorCode.UNAUTHORIZED;
         return ResponseEntity.status(errorCode.getHttpStatus())
-                .body(
-                        ApiResponse.builder()
-                                .code(errorCode.getCode())
-                                .message(errorCode.getMessage())
-                                .build()
-                );
+                .body(ApiResponse.builder()
+                        .code(errorCode.getCode())
+                        .message(errorCode.getMessage())
+                        .build());
     }
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     ResponseEntity<ApiResponse> handlingMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
         String enumKey = exception.getFieldError().getDefaultMessage();
-        System.out.println("EnumKey: "+ enumKey);
+        System.out.println("EnumKey: " + enumKey);
 
         ErrorCode errorCode = ErrorCode.INVALID_KEY;
         Map<String, Object> attributes = null;
         try {
-             errorCode = ErrorCode.valueOf(enumKey);
+            errorCode = ErrorCode.valueOf(enumKey);
 
-            var constraintViolation = exception.getBindingResult()
-                    .getAllErrors().getFirst().unwrap(ConstraintViolation.class);
+            var constraintViolation =
+                    exception.getBindingResult().getAllErrors().getFirst().unwrap(ConstraintViolation.class);
             attributes = constraintViolation.getConstraintDescriptor().getAttributes();
             log.info(attributes.toString());
         } catch (IllegalArgumentException e) {
@@ -73,14 +67,16 @@ public class GlobalExceptionHandler {
 
         ApiResponse apiResponse = new ApiResponse();
         apiResponse.setCode(errorCode.getCode());
-        apiResponse.setMessage(Objects.nonNull(attributes) ?
-                mapAttribute(errorCode.getMessage(), attributes) :
-                errorCode.getMessage());
+        apiResponse.setMessage(
+                Objects.nonNull(attributes)
+                        ? mapAttribute(errorCode.getMessage(), attributes)
+                        : errorCode.getMessage());
 
-        return  ResponseEntity.badRequest().body(apiResponse);
+        return ResponseEntity.badRequest().body(apiResponse);
     }
+
     private String mapAttribute(String message, Map<String, Object> attributes) {
         String minValue = String.valueOf(attributes.get(MIN_ATTRIBUTF));
-        return message.replace("{"+ MIN_ATTRIBUTF + "}", minValue);
+        return message.replace("{" + MIN_ATTRIBUTF + "}", minValue);
     }
 }

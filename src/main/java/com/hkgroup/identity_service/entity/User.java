@@ -1,12 +1,10 @@
 package com.hkgroup.identity_service.entity;
 
-import com.hkgroup.identity_service.validator.DobContraint;
+import java.time.LocalDate;
+import java.util.Set;
+
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @NoArgsConstructor
@@ -18,12 +16,14 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     private String userName;
     private String password;
     private String firstName;
     private String lastName;
     private String phone;
     private LocalDate dob;
+
     @ManyToMany
     private Set<Role> roles;
 }

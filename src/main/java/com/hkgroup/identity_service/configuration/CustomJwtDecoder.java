@@ -1,8 +1,10 @@
 package com.hkgroup.identity_service.configuration;
 
+import java.text.ParseException;
+import java.util.Objects;
+import javax.crypto.spec.SecretKeySpec;
+
 import com.hkgroup.identity_service.dto.request.IntrospectRequest;
-import com.hkgroup.identity_service.exception.AppException;
-import com.hkgroup.identity_service.exception.ErrorCode;
 import com.hkgroup.identity_service.service.AuthenticationService;
 import com.nimbusds.jose.JOSEException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,20 +16,18 @@ import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.stereotype.Component;
 
-import javax.crypto.spec.SecretKeySpec;
-import java.text.ParseException;
-import java.util.Objects;
-
 @Component
 public class CustomJwtDecoder implements JwtDecoder {
     @Value("${jwt.signerKey}")
     private String signerKey;
+
     @Autowired
     private AuthenticationService authenticationService;
 
     private NimbusJwtDecoder nimbusJwtDecoder = null;
+
     @Override
-    public Jwt decode(String token) throws JwtException{
+    public Jwt decode(String token) throws JwtException {
         try {
             var response = authenticationService.introspect(
                     IntrospectRequest.builder().token(token).build());

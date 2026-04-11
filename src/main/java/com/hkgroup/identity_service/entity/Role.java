@@ -1,11 +1,9 @@
 package com.hkgroup.identity_service.entity;
 
+import java.util.Set;
+
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 @Data
 @Entity
@@ -16,7 +14,9 @@ import java.util.Set;
 public class Role {
     @Id
     private String name;
+
     private String description;
+
     @ManyToMany
     Set<Permission> permissions;
 }

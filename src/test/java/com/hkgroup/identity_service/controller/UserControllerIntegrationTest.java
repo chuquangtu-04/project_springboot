@@ -1,15 +1,15 @@
 package com.hkgroup.identity_service.controller;
 
+import java.time.Duration;
+import java.time.LocalDate;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hkgroup.identity_service.dto.request.UserCreationRequest;
 import com.hkgroup.identity_service.dto.response.UserResponse;
 import com.hkgroup.identity_service.service.UserService;
 import lombok.extern.slf4j.Slf4j;
-import net.bytebuddy.utility.dispatcher.JavaDispatcher;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentMatchers;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,9 +22,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-
-import java.time.Duration;
-import java.time.LocalDate;
 
 @Slf4j
 @SpringBootTest
@@ -46,18 +43,21 @@ public class UserControllerIntegrationTest {
         registry.add("spring.datasource.driverClassName", () -> "com.mysql.cj.jdbc.Driver");
         registry.add("spring.jpa.hibernate.ddl-auto", () -> "update");
     }
+
     @Autowired
     private MockMvc mockMvc;
+
     private UserService userService;
     private UserCreationRequest userCreationRequest;
     private UserResponse userResponse;
     private LocalDate dob;
+
     @Autowired
     private ObjectMapper objectMapper;
 
     @BeforeEach
     void initData() {
-        dob = LocalDate.of(2004, 1,1);
+        dob = LocalDate.of(2004, 1, 1);
         userCreationRequest = UserCreationRequest.builder()
                 .userName("Chu Quang Tú")
                 .firstName("Chu Quang")
@@ -71,17 +71,14 @@ public class UserControllerIntegrationTest {
     @Test
     void createUser_validRequest_success() throws Exception {
         // GIVEN
-//        ObjectMapper objectMapper = new ObjectMapper();
+        //        ObjectMapper objectMapper = new ObjectMapper();
         String content = objectMapper.writeValueAsString(userCreationRequest);
         // WHEN, THEN
-        var response = mockMvc.perform(MockMvcRequestBuilders
-                .post("/users")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(content))
+        var response = mockMvc.perform(MockMvcRequestBuilders.post("/users")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(content))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("result.userName")
-                        .value("Chu Quang Tú"));
+                .andExpect(MockMvcResultMatchers.jsonPath("result.userName").value("Chu Quang Tú"));
         log.info("Result: {}", response.andReturn().getResponse().getContentAsString());
-
     }
 }

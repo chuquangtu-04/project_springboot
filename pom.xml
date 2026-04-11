@@ -127,6 +127,40 @@
 
 	<build>
 		<plugins>
+			<plugin>
+				<groupId>com.diffplug.spotless</groupId>
+				<artifactId>spotless-maven-plugin</artifactId>
+				<version>2.43.0</version>
+
+				<configuration>
+					<java>
+						<!-- Dùng Google Java Format -->
+						<palantirJavaFormat>
+							<version>2.38.0</version>
+						</palantirJavaFormat>
+
+						<!-- Xóa import thừa -->
+						<removeUnusedImports />
+
+						<!-- Sắp xếp import -->
+						<importOrder>
+							<order>java, jakarta, org, com, com.diffplug</order>
+						</importOrder>
+
+						<!-- Xuống dòng cuối file -->
+						<endWithNewline />
+					</java>
+				</configuration>
+
+				<executions>
+					<execution>
+						<goals>
+							<goal>apply</goal>
+						</goals>
+					</execution>
+				</executions>
+
+			</plugin>
 
 			<plugin>
 				<groupId>org.jacoco</groupId>

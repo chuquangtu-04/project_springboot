@@ -1,5 +1,8 @@
 package com.hkgroup.identity_service.service;
 
+import java.util.HashSet;
+import java.util.List;
+
 import com.hkgroup.identity_service.dto.request.RoleRequest;
 import com.hkgroup.identity_service.dto.response.RoleResponse;
 import com.hkgroup.identity_service.exception.AppException;
@@ -12,9 +15,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -24,7 +24,7 @@ public class RoleService {
     RoleMapper roleMapper;
 
     public RoleResponse create(RoleRequest request) {
-        if(roleRepository.existsRoleByName(request.getName())) {
+        if (roleRepository.existsRoleByName(request.getName())) {
             throw new AppException(ErrorCode.ROLE_EXISTED);
         }
 
@@ -35,10 +35,12 @@ public class RoleService {
 
         return roleMapper.toRoleResponse(role);
     }
+
     public List<RoleResponse> getAll() {
         var roles = roleRepository.findAll();
         return roleMapper.toRoleResponseList(roles);
     }
+
     public void delete(String role) {
         roleRepository.deleteById(role);
     }

@@ -3,9 +3,6 @@ package com.hkgroup.identity_service.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.HashSet;
-import java.util.Set;
-
 @Data
 @Entity
 @Builder
@@ -15,5 +12,6 @@ import java.util.Set;
 public class Permission {
     @Id
     private String name;
+
     private String description;
 }

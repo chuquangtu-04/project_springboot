@@ -12,6 +12,7 @@ import lombok.experimental.FieldDefaults;
 public class PermissionRequest {
     @NotBlank(message = "Permission name must not be blank")
     String name;
+
     @NotBlank(message = "Description must not be blank")
     String description;
 }

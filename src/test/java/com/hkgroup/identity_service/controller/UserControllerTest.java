@@ -1,5 +1,7 @@
 package com.hkgroup.identity_service.controller;
 
+import java.time.LocalDate;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hkgroup.identity_service.dto.request.UserCreationRequest;
 import com.hkgroup.identity_service.dto.response.UserResponse;
@@ -14,13 +16,10 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-
-import java.time.LocalDate;
 
 @Slf4j
 @SpringBootTest
@@ -37,12 +36,13 @@ public class UserControllerTest {
     private UserCreationRequest userCreationRequest;
     private UserResponse userResponse;
     private LocalDate dob;
+
     @Autowired
     private ObjectMapper objectMapper;
 
     @BeforeEach
     void initData() {
-        dob = LocalDate.of(2004, 1,1);
+        dob = LocalDate.of(2004, 1, 1);
         userCreationRequest = UserCreationRequest.builder()
                 .userName("Chu Quang Tú")
                 .firstName("Chu Quang")
@@ -64,19 +64,16 @@ public class UserControllerTest {
     @Test
     void createUser_validRequest_success() throws Exception {
         // GIVEN
-//        ObjectMapper objectMapper = new ObjectMapper();
+        //        ObjectMapper objectMapper = new ObjectMapper();
         String content = objectMapper.writeValueAsString(userCreationRequest);
         Mockito.when(userService.createRequest(ArgumentMatchers.any())).thenReturn(userResponse);
         // WHEN, THEN
-        mockMvc.perform(MockMvcRequestBuilders
-                .post("/users")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(content))
+        mockMvc.perform(MockMvcRequestBuilders.post("/users")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(content))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-//                .andExpect(MockMvcResultMatchers.jsonPath("code")
-//                        .value(1000))
-                .andExpect(MockMvcResultMatchers.jsonPath("result.id")
-                        .value("adb1221313123"));
-
+                //                .andExpect(MockMvcResultMatchers.jsonPath("code")
+                //                        .value(1000))
+                .andExpect(MockMvcResultMatchers.jsonPath("result.id").value("adb1221313123"));
     }
 }
