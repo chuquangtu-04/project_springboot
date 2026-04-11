@@ -94,7 +94,7 @@ public class AuthenticationService {
                 .issuer("chuquangtu.com")
                 .issueTime(new Date())
                 .expirationTime(new Date(
-                        Instant.now().plus(VALID_DURATION, ChronoUnit.SECONDS).toEpochMilli()
+                        Instant.now().plus(VALID_DURATION, ChronoUnit.MINUTES).toEpochMilli()
                 ))
                 .jwtID(UUID.randomUUID().toString())
                 .claim("scope", buildScope(user))
@@ -115,7 +115,7 @@ public class AuthenticationService {
         SignedJWT signedJWT = SignedJWT.parse(token);
         Date expiryTime =  (isRefresh)
                 ? new Date(signedJWT.getJWTClaimsSet().getIssueTime()
-                .toInstant().plus(REFRESH_DURATION, ChronoUnit.SECONDS).toEpochMilli())
+                .toInstant().plus(REFRESH_DURATION, ChronoUnit.MINUTES).toEpochMilli())
                 : signedJWT.getJWTClaimsSet().getExpirationTime();
 
         var verified = signedJWT.verify(verifier);
