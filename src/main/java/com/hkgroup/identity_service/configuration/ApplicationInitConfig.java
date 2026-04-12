@@ -1,5 +1,7 @@
 package com.hkgroup.identity_service.configuration;
 
+import java.util.HashSet;
+
 import com.hkgroup.identity_service.entity.User;
 import com.hkgroup.identity_service.enums.Role;
 import com.hkgroup.identity_service.repository.UserRepository;
@@ -10,28 +12,26 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
-
-import java.util.HashSet;
 
 @Configuration
 @Slf4j
 public class ApplicationInitConfig {
     @Autowired
     private PasswordEncoder passwordEncoder;
+
     @Bean
-    @ConditionalOnProperty(prefix = "spring",
-        value = "datasource.driverClassName",
-            havingValue = "com.mysql.cj.jdbc.Driver"
-    )
+    @ConditionalOnProperty(
+            prefix = "spring",
+            value = "datasource.driverClassName",
+            havingValue = "com.mysql.cj.jdbc.Driver")
     ApplicationRunner applicationRunner(UserRepository userRepository) {
         return args -> {
-            if(userRepository.findByuserName("admin").isEmpty()) {
+            if (userRepository.findByuserName("admin").isEmpty()) {
                 var roles = new HashSet<String>();
                 roles.add(Role.ADMIN.name());
                 User user = User.builder()
                         .userName("admin")
-//                        .role(roles)
+                        //                        .role(roles)
                         .password(passwordEncoder.encode("admin"))
                         .build();
                 userRepository.save(user);
