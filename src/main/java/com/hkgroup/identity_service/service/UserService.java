@@ -33,13 +33,16 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     public UserResponse createRequest(UserCreationRequest request) {
-        if (userRepository.existsByUserName(request.getUserName())) {
-            throw new AppException(ErrorCode.USER_EXISTED);
-        }
+//        if (userRepository.existsByUserName(request.getUserName())) {
+//            throw new AppException(ErrorCode.USER_EXISTED);
+//        }
         User user = userMapper.toUser(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user = userRepository.save(user);
-
+        try {
+            user = userRepository.save(user);
+        } catch (Exception e) {
+            throw new AppException(ErrorCode.USER_EXISTED);
+        }
         return userMapper.toUserResponse(user);
     }
 
