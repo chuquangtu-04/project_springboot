@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthenticationController {
     AuthenticationService authenticationService;
 
-    @PostMapping("/token")
+    @PostMapping("/login")
     ApiResponse<AuthenticationResponse> authenticated(@RequestBody AuthenticationRequest request) {
         var result = authenticationService.authenticated(request);
         return ApiResponse.<AuthenticationResponse>builder().result(result).build();
